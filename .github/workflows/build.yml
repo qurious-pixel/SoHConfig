@@ -9,14 +9,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
         configuration: [Release]
         include:
-        - os: ubuntu-latest
-          OS_NAME: Linux x64
-          DOTNET_RUNTIME_IDENTIFIER: linux-x64
-          RELEASE_ZIP_OS_NAME: linux_x64
-
         - os: windows-latest
           OS_NAME: Windows x64
           DOTNET_RUNTIME_IDENTIFIER: win-x64
@@ -41,3 +36,7 @@ jobs:
         run: dotnet test -c "${{ matrix.configuration }}"
       - name: Publish SoH Config
         run: dotnet publish -c "${{ matrix.configuration }}" -r "${{ matrix.DOTNET_RUNTIME_IDENTIFIER }}" -o ./publish --self-contained
+      - name: Upload SoH Config artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: publish
